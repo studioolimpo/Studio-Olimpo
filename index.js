@@ -1474,7 +1474,7 @@ barba.init({
               initWorksHero(next);
           }
         
-          gsap.delayedCall(12, initWorkScroll, [next]);
+          gsap.delayedCall(1.5, initWorkScroll, [next]);
         },
     },
     {
