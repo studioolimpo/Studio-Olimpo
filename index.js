@@ -931,7 +931,6 @@ function initFooterWorks(next) {
                 ease: "power3.out",
                 scrollTrigger: {
                     trigger: element,
-                    markers: true,
                     start: "top 60%",
                     end: "top top",
                     toggleActions: "play none none reverse",
