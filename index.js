@@ -1,5 +1,27 @@
 
 
+const appHeight = () => {
+    const doc = document.documentElement;
+    doc.style.setProperty("--app-height", `${window.innerHeight}px`);
+  };
+  
+  window.addEventListener("resize", appHeight);
+  appHeight();
+  
+  window.addEventListener("DOMContentLoaded", () => {
+    appHeight();
+    
+    // Legge il valore della variabile CSS correttamente
+    const appHeightValue = getComputedStyle(document.documentElement).getPropertyValue("--app-height");
+    console.log(appHeightValue);
+  });
+
+
+
+//// CUSTOM EASE /////
+
+CustomEase.create("load", "0.53, 0, 0, 1");
+
 
 
 ////////////  LENIS  //////////
@@ -59,18 +81,38 @@ window.addEventListener("load", () => {
 }
 
 
+function handleOrientationChange() {
+    setTimeout(function () {
+      window.location.reload();
+    }, 250);
+  }
+  window.addEventListener("orientationchange", handleOrientationChange);
+  
+  CustomEase.create("main", "0.5, 0.05, 0.05, 0.99");
+  CustomEase.create("load", "0.53, 0, 0, 1");
+
+
+
 //__________________GENERAL_________________//
 
+////////// CURRENT YEAR /////////
 
+function updateYear() {
+    const yrSpan = document.querySelector('.current-year');
+    if (yrSpan) { // Verifica che l'elemento esista prima di procedere
+      const currentYr = new Date().getFullYear();
+      yrSpan.textContent = currentYr;
+    }
+  }
 
 ////////// SPLIT TEXT //////////
 
-function splitText() {
-    new SplitType(".g_paragraph_wrap", {
-    types: "lines, chars", 
-    tagName: "span"
-    });
-    }
+// function splitText() {
+//     new SplitType(".g_paragraph_wrap", {
+//     types: "lines, chars", 
+//     tagName: "span"
+//     });
+//     }
 
 
 //////////  STOPMOTION  /////////
@@ -811,6 +853,156 @@ function initProjectLoader() {
 }
 
 
+///////////// 404 LOADER
+
+function initErrorLoader() {
+    let counter = { value: 0 };
+    let counterError = { value: 0 };
+    let loaderDuration = 3;
+    let loaderWrap = document.querySelector(".loader_wrap");
+    let loaderVisual = loaderWrap.querySelector(".loader_visual");
+    let loaderVisualWrapper = loaderWrap.querySelectorAll(".loader_visual_wrapper");
+    let loaderInner = loaderWrap.querySelectorAll(".loader_visual_inner");
+    let loaderProgress = loaderWrap.querySelector(".loader_progress");
+    let loaderText = loaderWrap.querySelectorAll(".u-text-style-small");
+    let sectionText = document.querySelector("._404_text .g_paragraph_wrap");
+    let sectionHeading = document.querySelector("._404_header_inner");
+    let sectionNumber = document.querySelector("._404_number");
+
+
+    let sectionButton = document.querySelector(".button_link_wrap");
+
+    if (sessionStorage.getItem("visited") !== null) {
+        loaderDuration = 3;
+    }
+    sessionStorage.setItem("visited", "true");
+
+    function updateLoaderText() {
+        let progress = Math.round(counter.value);
+        document.querySelector(".loader_number").textContent = progress;
+    }
+
+    function updateErrorText() {
+        let progress = Math.round(counterError.value);
+        sectionNumber.textContent = progress;
+    }
+
+    function endLoaderAnimation() {
+        gsap.fromTo(loaderInner, {
+            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            webkitClipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+        }, {
+            clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+            webkitClipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+            ease: "power2.inOut",
+            duration: 0.6,
+        });
+
+        gsap.to(loaderText, {
+            yPercent: -110,
+            duration: 0.4,
+            ease: "power2.out"
+        }, "<0.5");
+
+        gsap.to(loaderWrap, {
+            autoAlpha: 0,
+            ease: "power1.out",
+            duration: 0.7,
+            onComplete: function () {
+                loaderWrap.style.display = "none";
+                gsap.set(loaderInner, { autoAlpha: 0 });
+            },
+        }, "<0.45");
+
+
+
+        gsap.to(counterError, {
+            delay: 0.7,
+            value: 4,
+            onUpdate: updateErrorText,
+            duration: 1.5,
+            ease: "load",
+        });
+
+
+
+        gsap.fromTo(sectionHeading,
+            { yPercent: 115 },
+            {yPercent: 0, duration: 1.1, ease: "power2.out" },
+            "<0.2");
+
+
+        gsap.fromTo(
+            sectionText,
+            { yPercent: 110 },
+            { opacity: 1, yPercent: 0, duration: 0.7, ease: "power2.out" }, "<1.2"
+            );
+
+
+        gsap.fromTo(sectionButton,
+            {opacity:0},
+            {opacity: 1, duration: 1.2, ease: "power1.out"}, "<0.7"
+            );
+    }
+
+    let tl = gsap.timeline({
+        onStart: function () {
+            lenis.stop();
+        },
+        onComplete: function () {
+            ranHomeLoader = true;
+            endLoaderAnimation();
+            lenis.start();
+        },
+    });
+
+    gsap.set(loaderWrap, { autoAlpha: 1 });
+    gsap.set(loaderInner, {
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+    });
+    gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
+
+    tl.to(counter, {
+        value: 100,
+        onUpdate: updateLoaderText,
+        duration: loaderDuration,
+        ease: "load",
+    }, 0);
+
+    tl.fromTo(loaderText, {
+        yPercent: 100,
+    }, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out"
+    }, "<0.3");
+
+    tl.fromTo(loaderInner, {
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        autoAlpha: 0,
+        scale: 1.1
+    }, {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        webkitClipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        autoAlpha: 1,
+        scale: 1,
+        duration: 1
+    }, "<0.1");
+
+    tl.fromTo(loaderVisualWrapper, {
+        autoAlpha: 0
+    }, {
+        autoAlpha: 1,
+        ease: "none",
+        duration: 0.01,
+        stagger: 0.4
+    }, "<");
+}
+
 
 
 
@@ -1012,28 +1204,78 @@ function initVisualSlidein(next) {
 }
 
 
-function initLettersSlideUp(next) {
+// function initLettersSlideUp(next) {
+//     next = next || document;
+
+//     let elements = next.querySelectorAll("[letters-slide-up]");
+
+//     elements.forEach((element) => {
+
+//         let lines = $(element).find(".line");
+
+//         let tl = gsap.timeline({ delay: 0.2 });
+
+//         lines.each(function (index, line) {
+//             tl.from($(line).find(".char"), {
+//                 autoAlpha: 0,
+//                 yPercent: 100,
+//                 duration: 0.6,
+//                 ease: "cubic-bezier(0.65,0.05,0.36,1)",
+//                 stagger: 0.002
+//             }, index * 0.05);
+//         });
+//     });
+// };
+
+
+
+////////  404 //////////
+
+function initError(next) {
     next = next || document;
+    
+    let sectionText = document.querySelector("._404_text .g_paragraph_wrap");
+    let sectionHeading = document.querySelector("._404_header_inner");
+    let sectionNumber = document.querySelector("._404_number");
+    let sectionButton = document.querySelector(".button_link_wrap");
 
-    let elements = next.querySelectorAll("[letters-slide-up]");
 
-    elements.forEach((element) => {
+    let tl = gsap.timeline();
+  
+    function updateErrorText() {
+        let progress = Math.round(counterError.value);
+        sectionNumber.textContent = progress;
+    }
 
-        let lines = $(element).find(".line");
 
-        let tl = gsap.timeline({ delay: 0.2 });
-
-        lines.each(function (index, line) {
-            tl.from($(line).find(".char"), {
-                autoAlpha: 0,
-                yPercent: 100,
-                duration: 0.6,
-                ease: "cubic-bezier(0.65,0.05,0.36,1)",
-                stagger: 0.002
-            }, index * 0.05);
-        });
+    tl.to(counterError, {
+        delay: 0.7,
+        value: 4,
+        onUpdate: updateErrorText,
+        duration: 1.5,
+        ease: "load",
     });
-};
+
+
+
+    tl.fromTo(sectionHeading,
+        { yPercent: 115 },
+        {yPercent: 0, duration: 1.1, ease: "power2.out" },
+        "<0.2");
+
+
+    tl.fromTo(
+        sectionText,
+        { yPercent: 110 },
+        { opacity: 1, yPercent: 0, duration: 0.7, ease: "power2.out" }, "<1.2"
+        );
+
+
+    tl.fromTo(sectionButton,
+        {opacity:0},
+        {opacity: 1, duration: 1.2, ease: "power1.out"}, "<0.7"
+        );
+  }
 
 
 
@@ -1136,6 +1378,7 @@ barba.hooks.after((data) => {
 
   resetWebflow(data);
 
+  currentYear();
 });
 
 $(document).ready(function () {
@@ -1162,7 +1405,7 @@ barba.init({
       sync: true,
       leave(data) {
         const tl = gsap.timeline({
-          defaults: { duration: 1, ease: "power2.out" },
+          defaults: { duration: 0.9, ease: "power2.out" },
         });
 
         const coverWrap =
@@ -1174,8 +1417,10 @@ barba.init({
       },
       enter(data) {
         const tl = gsap.timeline({
-          defaults: { duration: 1, ease: "power2.out" },
+          defaults: { duration: 1.2, ease: "power2.out" },
         });
+
+        updateYear();
 
         const coverWrap = data.next.container.querySelector(".transition_wrap");
 
@@ -1215,6 +1460,7 @@ barba.init({
           } else {
         initAboutHero(next);
         }
+        gsap.delayedCall(1.5, initSectionFade, [next]);
       },
     },
     {
@@ -1228,7 +1474,7 @@ barba.init({
               initWorksHero(next);
           }
         
-          gsap.delayedCall(1.5, initWorkScroll, [next]);
+          gsap.delayedCall(12, initWorkScroll, [next]);
         },
     },
     {
@@ -1259,6 +1505,17 @@ barba.init({
             initVisualSlidein(next);
             initSectionFade(next);
             initFooterWorks(next);
+        },
+      },
+      {
+        namespace: "404",
+        beforeEnter(data) {
+            let next = data.next.container;
+            if (ranHomeLoader !== true) {
+               initErrorLoader();
+             } else {
+              initError(next);
+          }
         },
       },
   ],
