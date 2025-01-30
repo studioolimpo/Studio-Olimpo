@@ -1202,11 +1202,9 @@ barba.init({
         initHome(next);
         }
         gsap.delayedCall(1.5, initThemeAnimation, [next]);
+        gsap.delayedCall(1.5, initSectionFade, [next]);
+
       },
-      afterEnter(data) {
-        let next = data.next.container;
-        initSectionFade(next);
-      }
     },
     {
       namespace: "about",
