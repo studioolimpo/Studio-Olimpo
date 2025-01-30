@@ -139,10 +139,10 @@ function initStopmotion(next) {
             gsap.set(visuals[prevIndex], { opacity: 0, position: "absolute" });
             gsap.set(visuals[currentIndex], { opacity: 1, position: "relative" });
 
-            setTimeout(animateStopmotion, 1000);
+            setTimeout(animateStopmotion, 1500);
         }
 
-        setTimeout(animateStopmotion, 1000);
+        setTimeout(animateStopmotion, 1500);
     });
 }
 
