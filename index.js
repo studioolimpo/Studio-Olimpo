@@ -95,6 +95,19 @@ function handleOrientationChange() {
 
 //__________________GENERAL_________________//
 
+///// RESET VISUAL ////
+
+
+function resetVisual(next) {
+    let a = next.querySelectorAll("[visual-fade-in]");
+  
+    gsap.set(a, {
+      opacity: 0,
+      overwrite: true,
+    });
+  }
+
+
 ////////// CURRENT YEAR /////////
 
 function updateYear(next) {
@@ -749,7 +762,7 @@ function initProjectLoader() {
     let loaderProgress = loaderWrap.querySelector(".loader_progress");
     let loaderText = loaderWrap.querySelectorAll(".u-text-style-small");
     let projectHero = document.querySelectorAll(".project_contain");
-    let projectVisual = document.querySelectorAll(".visual_contain");
+    let projectVisual = document.querySelectorAll(".visual_content");
 
     
 
@@ -800,7 +813,7 @@ function initProjectLoader() {
           );
 
           gsap.fromTo(projectVisual,
-            {scale: 1.01, opacity: 0},
+            {scale: 1.05, opacity: 0},
             {opacity: 1, scale: 1, duration: 1.2, ease: "power2.out"},
             "<0.2");
     }
@@ -1099,31 +1112,44 @@ function initAboutHero(next) {
 function initWorkScroll(next) {
     next = next || document;
 
+    console.log("works scroll RUN!");
+
     let elements = next.querySelectorAll("[visual-fade-in]");
 
     elements.forEach((element) => {
-        gsap.set(element, { opacity: 0 });
+        // Otteniamo la posizione dell'elemento rispetto alla finestra
+        const rect = element.getBoundingClientRect();
+        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0; // Elemento visibile nella finestra
+        const hasPassedStart = rect.top < window.innerHeight * 0.8;  // L'elemento ha oltrepassato il 80% della finestra (o altra soglia di start)
 
-        gsap.fromTo(
-            element,
-            { opacity: 0, yPercent: 3 },
-            {
+        // Se l'elemento è visibile e ha oltrepassato il punto di inizio (scrollTrigger)
+        if (isVisible && hasPassedStart) {
+            gsap.set(element, { opacity: 0, yPercent: 3 }); // Impostiamo stato iniziale (invisibile e spostato)
+            gsap.to(element, {
+                opacity: 1,
+                yPercent: 0,
+                duration: 0.7,
+                
+                ease: "power2.out"
+            });
+        } else {
+            // Se l'elemento non è visibile o non ha oltrepassato la posizione di start, usiamo scrollTrigger
+            gsap.set(element, { opacity: 0, yPercent: 3 });
+
+            gsap.fromTo(element, { opacity: 0, yPercent: 3 }, {
                 opacity: 1,
                 yPercent: 0,
                 duration: 0.7,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: element,
-                    markers: true,
-                    start: "top 80%",
-                    end: "top top",
-                    toggleActions: "play none none none",
-                },
-            }
-        );
+                    start: "top 80%",  // L'elemento diventa visibile al 80% della finestra
+                    end: "top top",    // Quando l'elemento arriva al top della finestra
+                    toggleActions: "play none none none"
+                }
+            });
+        }
     });
-
-    ScrollTrigger.refresh();
 }
 
 function initFooterWorks(next) {
@@ -1179,7 +1205,7 @@ function initContactHero(next) {
 function initProjectHero(next) {
     next = next || document;
     let heroProject = next.querySelector(".project_contain");
-    let heroVisual = next.querySelector(".visual_contain");
+    let heroVisual = next.querySelector(".visual_content");
 
 
     gsap.fromTo(
@@ -1189,7 +1215,7 @@ function initProjectHero(next) {
       );
 
     gsap.fromTo(heroVisual,
-        {scale: 1.03},
+        {scale: 1.05},
         {scale: 1, duration: 1.2, ease: "power2.out"},
         "<0.2");
 }
@@ -1338,20 +1364,27 @@ function resetWebflow(data) {
 }
 
 
-barba.hooks.leave(() => {
-    lenis.destroy();
+
+// barba.hooks.beforeLeave(() => {
+
 
     
+// })
+
+barba.hooks.leave(() => {
+
+    lenis.destroy(); // Distrugge Lenis per evitare problemi con lo scroll
+
+    // Kill di tutti gli ScrollTrigger attivi
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    
+    // Piccolo delay per garantire la rimozione
+    gsap.delayedCall(0.1, () => ScrollTrigger.refresh());
+
 })
 
 
 barba.hooks.before((data) => {    
-
-    let triggers = ScrollTrigger.getAll();
-    triggers.forEach((trigger) => {
-        trigger.kill();
-    });
-  
 
   });
 
@@ -1360,7 +1393,9 @@ barba.hooks.enter((data) => {
     
     resetThemeLight();
 
-    // ScrollTrigger.refresh();
+
+
+
 
   gsap.set(data.next.container, {
     position: "fixed",
@@ -1380,7 +1415,9 @@ barba.hooks.afterEnter((data) => {
         easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -13 * t)),
       });
 
-      
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+    });
 
 });
 
@@ -1431,6 +1468,8 @@ barba.init({
 
         tl.to(coverWrap, { opacity: 1 });
 
+ 
+
         return tl;
       },
       enter(data) {
@@ -1444,7 +1483,7 @@ barba.init({
         tl.set(coverWrap, { opacity: 0 });
 
         tl.from(data.next.container, { y: "100vh" });
-        tl.to(data.current.container, { y: "-20vh" }, "<");
+        tl.to(data.current.container, { y: "-30vh" }, "<");
 
         return tl;
 
@@ -1460,14 +1499,14 @@ barba.init({
         let next = data.next.container;
         if (ranHomeLoader !== true) {
             initHomeLoader();
-            // initThemeAnimation(next);
-            // initSectionFade (next);
+            initThemeAnimation(next);
+            initSectionFade (next);
           } else {
         initHome(next);
-        gsap.delayedCall(1.2, initThemeAnimation, [next]);
-        gsap.delayedCall(1.2, initSectionFade, [next]);
+        gsap.delayedCall(1.5, initThemeAnimation, [next]);
+        gsap.delayedCall(1.5, initSectionFade, [next]);
         }
-        // updateYear(next)
+        updateYear(next)
         
 
       },
@@ -1488,17 +1527,19 @@ barba.init({
     {
         namespace: "works",
         beforeEnter(data) {
-          let next = data.next.container;
-          
-          if (ranHomeLoader !== true) {
-              initWorksLoader();
-              gsap.delayedCall(4.3, initWorkScroll, [next]);
-          } else {
-            gsap.delayedCall(1, initWorkScroll, [next]);
+            let next = data.next.container;
+    
+            if (ranHomeLoader !== true) {
+                initWorksLoader();
+                resetVisual(next)
+                gsap.delayedCall(4.2, initWorkScroll, [next]);
+            } else {
+                resetVisual(next)
+                gsap.delayedCall(0.9, initWorkScroll, [next]);
             }
-          updateYear(next)
+
+            updateYear(next);
         },
-                
     },
     {
       namespace: "contact",
