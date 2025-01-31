@@ -1360,7 +1360,7 @@ barba.hooks.enter((data) => {
     
     resetThemeLight();
 
-    ScrollTrigger.refresh();
+    // ScrollTrigger.refresh();
 
   gsap.set(data.next.container, {
     position: "fixed",
@@ -1373,8 +1373,6 @@ barba.hooks.enter((data) => {
 
 
 barba.hooks.afterEnter((data) => {
-
-    
 
     lenis = new Lenis({
         duration: 1.1,
@@ -1462,12 +1460,15 @@ barba.init({
         let next = data.next.container;
         if (ranHomeLoader !== true) {
             initHomeLoader();
+            // initThemeAnimation(next);
+            // initSectionFade (next);
           } else {
         initHome(next);
-        }
-        updateYear(next)
         gsap.delayedCall(1.2, initThemeAnimation, [next]);
         gsap.delayedCall(1.2, initSectionFade, [next]);
+        }
+        // updateYear(next)
+        
 
       },
     },
@@ -1480,8 +1481,8 @@ barba.init({
           } else {
         initAboutHero(next);
         }
-        updateYear(next)
         gsap.delayedCall(1.2, initSectionFade, [next]);
+        updateYear(next)
       },
     },
     {
@@ -1493,7 +1494,7 @@ barba.init({
               initWorksLoader();
               gsap.delayedCall(4.3, initWorkScroll, [next]);
           } else {
-            gsap.delayedCall(0.9, initWorkScroll, [next]);
+            gsap.delayedCall(1, initWorkScroll, [next]);
             }
           updateYear(next)
         },
