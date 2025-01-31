@@ -97,9 +97,12 @@ function handleOrientationChange() {
 
 ////////// CURRENT YEAR /////////
 
-function updateYear() {
-    const yrSpan = document.querySelector('.current-year');
-    if (yrSpan) { // Verifica che l'elemento esista prima di procedere
+function updateYear(next) {
+
+    next = next || document;
+
+    let yrSpan = next.querySelector('.current-year');
+    if (yrSpan) {
       const currentYr = new Date().getFullYear();
       yrSpan.textContent = currentYr;
     }
@@ -129,8 +132,17 @@ function initStopmotion(next) {
 
         let currentIndex = 0;
 
-        gsap.set(visuals, { opacity: 0, position: "absolute" });
-        gsap.set(visuals[0], { opacity: 1, position: "relative" });
+        // Impostiamo gli elementi con `will-change` per migliorare il rendering su Safari
+        gsap.set(visuals, { 
+            opacity: 0, 
+            position: "absolute", 
+            willChange: "opacity, transform" 
+        });
+
+        gsap.set(visuals[0], { 
+            opacity: 1, 
+            position: "relative" 
+        });
 
         function animateStopmotion() {
             let prevIndex = currentIndex;
@@ -193,7 +205,8 @@ function initSectionFade(next) {
                 ease: "power1.out",
                 scrollTrigger: {
                     trigger: element,
-                    start: "top 60%",
+                    start: "top 70%",
+                    // markers: true,
                     end: "top top",
                     toggleActions: "play none none none",
                 },
@@ -525,15 +538,15 @@ function initWorksLoader() {
 
         
 
-        gsap.fromTo(worksVisual, { 
-            yPercent: 2, opacity: 0
-            }, 
-            {
-                yPercent: 0,
-                opacity: 1, 
-                duration: 0.7,
-                ease: "power1.out" 
-            }, "<0.2");
+        // gsap.fromTo(worksVisual, { 
+        //     yPercent: 2, opacity: 0
+        //     }, 
+        //     {
+        //         yPercent: 0,
+        //         opacity: 1, 
+        //         duration: 0.7,
+        //         ease: "power1.out" 
+        //     }, "<0.2");
     }
 
     let tl = gsap.timeline({
@@ -788,7 +801,7 @@ function initProjectLoader() {
 
           gsap.fromTo(projectVisual,
             {scale: 1.01, opacity: 0},
-            {opacity: 1, scale: 1, duration: 1, ease: "power2.out"},
+            {opacity: 1, scale: 1, duration: 1.2, ease: "power2.out"},
             "<0.2");
     }
 
@@ -1056,48 +1069,52 @@ function initAboutHero(next) {
 
 //////////  WORKS  //////////
 
-function initWorksHero(next) {
-    next = next || document;
+// function initWorksHero(next) {
+//     next = next || document;
   
   
  
-    let visual = next.querySelectorAll("#hero .hero_visual_item");
+//     let visual = next.querySelectorAll("#hero .hero_visual_item");
   
-    visual.forEach((item, index) => {
+//     visual.forEach((item, index) => {
     
-    let tl = gsap.timeline();
-    tl.set (visual, {opacity:0 });
-      tl.fromTo(
-        item,
-        { yPercent: 2, opacity: 0 }, 
-        {
-          yPercent: 0,
-          opacity: 1, 
-          duration: 0.7,
-          delay: 0.5,   
-        }
-      );
-    });
-  }
+//     let tl = gsap.timeline();
+//     tl.set (visual, {opacity:0 });
+//       tl.fromTo(
+//         item,
+//         { yPercent: 2, opacity: 0 }, 
+//         {
+//           yPercent: 0,
+//           opacity: 1, 
+//           duration: 0.7,
+//           delay: 0.7,
+//           ease: "power2.out"
+//         }
+//       );
+//     });
+//   }
 
 
   
-  function initWorkScroll(next) {
+function initWorkScroll(next) {
     next = next || document;
 
     let elements = next.querySelectorAll("[visual-fade-in]");
 
     elements.forEach((element) => {
+        gsap.set(element, { opacity: 0 });
+
         gsap.fromTo(
             element,
-            { opacity: 0, y: "1rem" },
+            { opacity: 0, yPercent: 3 },
             {
                 opacity: 1,
-                y: "0rem",
-                duration: 1,
+                yPercent: 0,
+                duration: 0.7,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: element,
+                    markers: true,
                     start: "top 80%",
                     end: "top top",
                     toggleActions: "play none none none",
@@ -1105,6 +1122,8 @@ function initWorksHero(next) {
             }
         );
     });
+
+    ScrollTrigger.refresh();
 }
 
 function initFooterWorks(next) {
@@ -1171,8 +1190,8 @@ function initProjectHero(next) {
 
     gsap.fromTo(heroVisual,
         {scale: 1.03},
-        {scale: 1, duration: 1, ease: "power2.out"},
-        "<0.3");
+        {scale: 1, duration: 1.2, ease: "power2.out"},
+        "<0.2");
 }
 
 
@@ -1378,7 +1397,8 @@ barba.hooks.after((data) => {
 
   resetWebflow(data);
 
-  currentYear();
+
+
 });
 
 $(document).ready(function () {
@@ -1405,7 +1425,7 @@ barba.init({
       sync: true,
       leave(data) {
         const tl = gsap.timeline({
-          defaults: { duration: 0.9, ease: "power2.out" },
+          defaults: { duration: 1, ease: "power2.out" },
         });
 
         const coverWrap =
@@ -1417,17 +1437,16 @@ barba.init({
       },
       enter(data) {
         const tl = gsap.timeline({
-          defaults: { duration: 1.2, ease: "power2.out" },
+          defaults: { duration: 1, ease: "power3.out" },
         });
 
-        updateYear();
 
         const coverWrap = data.next.container.querySelector(".transition_wrap");
 
         tl.set(coverWrap, { opacity: 0 });
 
         tl.from(data.next.container, { y: "100vh" });
-        tl.to(data.current.container, { y: "-30vh" }, "<");
+        tl.to(data.current.container, { y: "-20vh" }, "<");
 
         return tl;
 
@@ -1446,8 +1465,9 @@ barba.init({
           } else {
         initHome(next);
         }
-        gsap.delayedCall(1.5, initThemeAnimation, [next]);
-        gsap.delayedCall(1.5, initSectionFade, [next]);
+        updateYear(next)
+        gsap.delayedCall(1.2, initThemeAnimation, [next]);
+        gsap.delayedCall(1.2, initSectionFade, [next]);
 
       },
     },
@@ -1460,7 +1480,8 @@ barba.init({
           } else {
         initAboutHero(next);
         }
-        gsap.delayedCall(1.5, initSectionFade, [next]);
+        updateYear(next)
+        gsap.delayedCall(1.2, initSectionFade, [next]);
       },
     },
     {
@@ -1470,12 +1491,13 @@ barba.init({
           
           if (ranHomeLoader !== true) {
               initWorksLoader();
+              gsap.delayedCall(4.3, initWorkScroll, [next]);
           } else {
-              initWorksHero(next);
-          }
-        
-          gsap.delayedCall(1.5, initWorkScroll, [next]);
+            gsap.delayedCall(0.9, initWorkScroll, [next]);
+            }
+          updateYear(next)
         },
+                
     },
     {
       namespace: "contact",
@@ -1486,6 +1508,7 @@ barba.init({
           } else {
             initContactHero(next);
         }
+        updateYear(next)
       },
     },{
         namespace: "projects",
@@ -1496,14 +1519,14 @@ barba.init({
           } else {
             initProjectHero(next);
         }
-        
-        
+        gsap.delayedCall(1.2, initSectionFade, [next]);
         },
+
         afterEnter(data) {
             let next = data.next.container;
             initStopmotion(next);
             initVisualSlidein(next);
-            initSectionFade(next);
+            updateYear(next)
             initFooterWorks(next);
         },
       },
@@ -1516,6 +1539,7 @@ barba.init({
              } else {
               initError(next);
           }
+          updateYear(next)
         },
       },
   ],
