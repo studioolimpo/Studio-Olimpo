@@ -95,6 +95,36 @@ function handleOrientationChange() {
 
 //__________________GENERAL_________________//
 
+////// MOUSE MOVE CURSOR //////
+
+function mouseMoveCursor() {
+    const cursor = document.querySelector(".cursor_wrap");
+    let cursorRevealed = false;
+
+    // Nasconde il cursore all'inizio
+    cursor.classList.add("cursor_hide");
+
+    // Imposta il cursore con GSAP
+    gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+
+    let xTo = gsap.quickTo(cursor, "x", { duration: 0.7, ease: "power3.out" });
+    let yTo = gsap.quickTo(cursor, "y", { duration: 0.7, ease: "power3.out" });
+
+    // Evento per il movimento del mouse
+    window.addEventListener("mousemove", (e) => {
+        xTo(e.clientX);
+        yTo(e.clientY);
+
+        // Mostra il cursore al primo movimento
+        if (!cursorRevealed) {
+            cursor.classList.remove("cursor_hide");
+            cursorRevealed = true;
+        }
+    });
+}
+
+
+
 ///// RESET VISUAL ////
 
 
@@ -1179,7 +1209,6 @@ function initFooterWorks(next) {
                 delay: 0.2,
                 scrollTrigger: {
                     trigger: element,
-                    markers: true,
                     start: "top bottom", 
                     end: "top top",
                     toggleActions: "restart none none none", 
@@ -1232,8 +1261,12 @@ function initProjectHero(next) {
         {autoAlpha: 1, duration: 0.7, ease: "sine.inOut"},
         "<0.3");
 
-     
+    
 }
+
+
+
+
 
 
 function initVisualSlidein(next) {
@@ -1407,7 +1440,6 @@ barba.hooks.enter((data) => {
 
 
 
-
   gsap.set(data.next.container, {
     position: "fixed",
     top: 0,
@@ -1512,10 +1544,13 @@ barba.init({
             initHomeLoader();
             initThemeAnimation(next);
             initSectionFade (next);
+            mouseMoveCursor();
+
           } else {
         initHome(next);
         gsap.delayedCall(1.5, initThemeAnimation, [next]);
         gsap.delayedCall(1.5, initSectionFade, [next]);
+
         }
         updateYear(next)
         
@@ -1528,6 +1563,7 @@ barba.init({
         let next = data.next.container;
         if (ranHomeLoader !== true) {
             initAboutLoader();
+            mouseMoveCursor();
           } else {
         initAboutHero(next);
         }
@@ -1542,13 +1578,13 @@ barba.init({
     
             if (ranHomeLoader !== true) {
                 initWorksLoader();
-                resetVisual(next)
+                resetVisual(next);
+                mouseMoveCursor();
                 gsap.delayedCall(4.2, initWorkScroll, [next]);
             } else {
                 resetVisual(next)
                 gsap.delayedCall(0.9, initWorkScroll, [next]);
             }
-
             updateYear(next);
         },
     },
@@ -1558,6 +1594,7 @@ barba.init({
         let next = data.next.container;
         if (ranHomeLoader !== true) {
             initContactLoader();
+            mouseMoveCursor();
           } else {
             initContactHero(next);
         }
@@ -1569,6 +1606,7 @@ barba.init({
           let next = data.next.container;
           if (ranHomeLoader !== true) {
             initProjectLoader();
+            mouseMoveCursor();
           } else {
             initProjectHero(next);
             resetVideo(next);
@@ -1594,6 +1632,7 @@ barba.init({
             let next = data.next.container;
             if (ranHomeLoader !== true) {
                initErrorLoader();
+               mouseMoveCursor();
              } else {
               initError(next);
           }
