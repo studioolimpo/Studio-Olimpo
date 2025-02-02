@@ -1,20 +1,20 @@
 
 
-const appHeight = () => {
-    const doc = document.documentElement;
-    doc.style.setProperty("--app-height", `${window.innerHeight}px`);
-  };
+// const appHeight = () => {
+//     const doc = document.documentElement;
+//     doc.style.setProperty("--app-height", `${window.innerHeight}px`);
+//   };
   
-  window.addEventListener("resize", appHeight);
-  appHeight();
+//   window.addEventListener("resize", appHeight);
+//   appHeight();
   
-  window.addEventListener("DOMContentLoaded", () => {
-    appHeight();
+//   window.addEventListener("DOMContentLoaded", () => {
+//     appHeight();
     
-    // Legge il valore della variabile CSS correttamente
-    const appHeightValue = getComputedStyle(document.documentElement).getPropertyValue("--app-height");
-    console.log(appHeightValue);
-  });
+   
+//     const appHeightValue = getComputedStyle(document.documentElement).getPropertyValue("--app-height");
+//     console.log(appHeightValue);
+//   });
 
 
 
@@ -73,7 +73,6 @@ window.addEventListener("load", () => {
     }
   });
   
-  // Ricarica la pagina se tornata dalla cache
   window.onpageshow = (event) => event.persisted && window.location.reload();
 
 
@@ -95,27 +94,33 @@ function handleOrientationChange() {
 
 //__________________GENERAL_________________//
 
+/////////// SIGNATURE /////////
+
+function Signature() {
+    if (ranHomeLoader === false) { 
+      console.log("%cCredits: Studio Olimpo – https://www.studioolimpo.it", "background: #F8F6F1; color: #000; font-size: 12px; padding:10px 14px;");
+    }
+  }
+
+
+
 ////// MOUSE MOVE CURSOR //////
 
 function mouseMoveCursor() {
     const cursor = document.querySelector(".cursor_wrap");
     let cursorRevealed = false;
 
-    // Nasconde il cursore all'inizio
     cursor.classList.add("cursor_hide");
 
-    // Imposta il cursore con GSAP
     gsap.set(cursor, { xPercent: -50, yPercent: -50 });
 
     let xTo = gsap.quickTo(cursor, "x", { duration: 0.7, ease: "power3.out" });
     let yTo = gsap.quickTo(cursor, "y", { duration: 0.7, ease: "power3.out" });
 
-    // Evento per il movimento del mouse
     window.addEventListener("mousemove", (e) => {
         xTo(e.clientX);
         yTo(e.clientY);
 
-        // Mostra il cursore al primo movimento
         if (!cursorRevealed) {
             cursor.classList.remove("cursor_hide");
             cursorRevealed = true;
@@ -131,7 +136,7 @@ function mouseMoveCursor() {
 function resetVisual(next) {
     let a = next.querySelectorAll("[visual-fade-in]");
   
-    gsap.set(a, { // Corretto: uso di spread operator per unire NodeList
+    gsap.set(a, {
       opacity: 0, 
       overwrite: true
     });
@@ -143,7 +148,7 @@ function resetVisual(next) {
 function resetVideo(next) {
     let a = next.querySelector("[visual-slide-in]");
   
-    gsap.set(a, { // Corretto: uso di spread operator per unire NodeList
+    gsap.set(a, { 
       autoAlpha: 0, 
       overwrite: true
     });
@@ -163,14 +168,7 @@ function updateYear(next) {
     }
   }
 
-////////// SPLIT TEXT //////////
 
-// function splitText() {
-//     new SplitType(".g_paragraph_wrap", {
-//     types: "lines, chars", 
-//     tagName: "span"
-//     });
-//     }
 
 
 //////////  STOPMOTION  /////////
@@ -187,7 +185,6 @@ function initStopmotion(next) {
 
         let currentIndex = 0;
 
-        // Impostiamo gli elementi con `will-change` per migliorare il rendering su Safari
         gsap.set(visuals, { 
             opacity: 0, 
             position: "absolute", 
@@ -589,17 +586,6 @@ function initWorksLoader() {
             },
         }, "<0.45");
 
-        
-
-        // gsap.fromTo(worksVisual, { 
-        //     yPercent: 2, opacity: 0
-        //     }, 
-        //     {
-        //         yPercent: 0,
-        //         opacity: 1, 
-        //         duration: 0.7,
-        //         ease: "power1.out" 
-        //     }, "<0.2");
     }
 
     let tl = gsap.timeline({
@@ -1122,32 +1108,6 @@ function initAboutHero(next) {
 
 //////////  WORKS  //////////
 
-// function initWorksHero(next) {
-//     next = next || document;
-  
-  
- 
-//     let visual = next.querySelectorAll("#hero .hero_visual_item");
-  
-//     visual.forEach((item, index) => {
-    
-//     let tl = gsap.timeline();
-//     tl.set (visual, {opacity:0 });
-//       tl.fromTo(
-//         item,
-//         { yPercent: 2, opacity: 0 }, 
-//         {
-//           yPercent: 0,
-//           opacity: 1, 
-//           duration: 0.7,
-//           delay: 0.7,
-//           ease: "power2.out"
-//         }
-//       );
-//     });
-//   }
-
-
   
 function initWorkScroll(next) {
     next = next || document;
@@ -1157,14 +1117,14 @@ function initWorkScroll(next) {
     let elements = next.querySelectorAll("[visual-fade-in]");
 
     elements.forEach((element) => {
-        // Otteniamo la posizione dell'elemento rispetto alla finestra
+        
         const rect = element.getBoundingClientRect();
-        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0; // Elemento visibile nella finestra
-        const hasPassedStart = rect.top < window.innerHeight * 0.8;  // L'elemento ha oltrepassato il 80% della finestra (o altra soglia di start)
+        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0; 
+        const hasPassedStart = rect.top < window.innerHeight * 0.8; 
 
-        // Se l'elemento è visibile e ha oltrepassato il punto di inizio (scrollTrigger)
+       
         if (isVisible && hasPassedStart) {
-            gsap.set(element, { autoAlpha: 0, yPercent: 3 }); // Impostiamo stato iniziale (invisibile e spostato)
+            gsap.set(element, { autoAlpha: 0, yPercent: 3 }); 
             gsap.to(element, {
                 autoAlpha: 1,
                 yPercent: 0,
@@ -1173,7 +1133,7 @@ function initWorkScroll(next) {
                 ease: "power2.out"
             });
         } else {
-            // Se l'elemento non è visibile o non ha oltrepassato la posizione di start, usiamo scrollTrigger
+            
             gsap.set(element, { autoAlpha: 0, yPercent: 3 });
 
             gsap.fromTo(element, { autoAlpha: 0, yPercent: 3 }, {
@@ -1183,8 +1143,8 @@ function initWorkScroll(next) {
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: element,
-                    start: "top 80%",  // L'elemento diventa visibile al 80% della finestra
-                    end: "top top",    // Quando l'elemento arriva al top della finestra
+                    start: "top 80%",  
+                    end: "top top",   
                     toggleActions: "play none none none"
                 }
             });
@@ -1195,12 +1155,12 @@ function initWorkScroll(next) {
 function initFooterWorks(next) {
     next = next || document;
 
-    let element = next.querySelector(".footer_2_contain"); // Seleziona l'elemento
+    let element = next.querySelector(".footer_2_contain"); 
 
-    if (element) { // Verifica che l'elemento esista
+    if (element) { 
         gsap.fromTo(
             element,
-            { autoAlpha: 0, y: "2rem" }, // Stato iniziale
+            { autoAlpha: 0, y: "2rem" }, 
             {
                 autoAlpha: 1,
                 y: "0rem",
@@ -1278,43 +1238,19 @@ function initVisualSlidein(next) {
         gsap.set(element, { autoAlpha: 0 });
 
         gsap.to(element, {
-            autoAlpha: 1, // L'elemento torna alla posizione originale
+            autoAlpha: 1, 
             duration: 0.7,
             ease: "sine.inOut",
             stagger: 0.7,
             scrollTrigger: {
                 trigger: element,
-                start: "top 80%",   // L'animazione inizia quando l'elemento è visibile
-                end: "top center",  // Termina a metà schermo
+                start: "top 80%", 
+                end: "top center",  
                 toggleActions: "play none none none",
             },
         });
     });
 }
-
-
-// function initLettersSlideUp(next) {
-//     next = next || document;
-
-//     let elements = next.querySelectorAll("[letters-slide-up]");
-
-//     elements.forEach((element) => {
-
-//         let lines = $(element).find(".line");
-
-//         let tl = gsap.timeline({ delay: 0.2 });
-
-//         lines.each(function (index, line) {
-//             tl.from($(line).find(".char"), {
-//                 autoAlpha: 0,
-//                 yPercent: 100,
-//                 duration: 0.6,
-//                 ease: "cubic-bezier(0.65,0.05,0.36,1)",
-//                 stagger: 0.002
-//             }, index * 0.05);
-//         });
-//     });
-// };
 
 
 
@@ -1409,20 +1345,14 @@ function resetWebflow(data) {
 
 
 
-// barba.hooks.beforeLeave(() => {
-
-
-    
-// })
 
 barba.hooks.leave(() => {
 
-    lenis.destroy(); // Distrugge Lenis per evitare problemi con lo scroll
+    lenis.destroy();
 
-    // Kill di tutti gli ScrollTrigger attivi
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     
-    // Piccolo delay per garantire la rimozione
+
     gsap.delayedCall(0.1, () => ScrollTrigger.refresh());
 
 })
@@ -1462,6 +1392,8 @@ barba.hooks.afterEnter((data) => {
         ScrollTrigger.refresh();
     });
 
+    Signature();
+    
 });
 
 
@@ -1611,16 +1543,12 @@ barba.init({
             initProjectHero(next);
             resetVideo(next);
         }
-        // gsap.delayedCall(1.2, initSectionFade, [next]);
-        // gsap.delayedCall(1.2, initVisualSlidein, [next]);
-        
         
         },
 
         afterEnter(data) {
             let next = data.next.container;
             initStopmotion(next);
-            //updateYear(next)
             initFooterWorks(next);
             initVisualSlidein(next);
             initSectionFade(next);
