@@ -101,24 +101,23 @@ function handleOrientationChange() {
 function resetVisual(next) {
     let a = next.querySelectorAll("[visual-fade-in]");
   
-    gsap.set(a, {
-      opacity: 0,
-      overwrite: true,
+    gsap.set(a, { // Corretto: uso di spread operator per unire NodeList
+      opacity: 0, 
+      overwrite: true
     });
-  }
+}
+
+///// RESET VIDEO ////
 
 
-  ///// ZOOM VISUAL ////
-
-
-function zoomVisual(next) {
-    let a = next.querySelectorAll("[visual-slide-in]");
+function resetVideo(next) {
+    let a = next.querySelector("[visual-slide-in]");
   
-    gsap.set(a, {
-      scale: 1.03,
-      overwrite: true,
+    gsap.set(a, { // Corretto: uso di spread operator per unire NodeList
+      autoAlpha: 0, 
+      overwrite: true
     });
-  }
+}
 
 
 ////////// CURRENT YEAR /////////
@@ -226,8 +225,8 @@ function initSectionFade(next) {
             { autoAlpha: 0 },
             {
                 autoAlpha: 1,
-                duration: 1.5,
-                ease: "power2.out",
+                duration: 0.7,
+                ease: "sine.inOut",
                 scrollTrigger: {
                     trigger: element,
                     start: "top 70%",
@@ -819,14 +818,14 @@ function initProjectLoader() {
         
         gsap.fromTo(
             projectHero,
-            { yPercent: 1, opacity: 0 },
-            {opacity: 1, yPercent: 0, duration: 0.7, ease: "power1.out", stagger: 0.1 }, "<0.3"
+            { y: "1rem", opacity: 0 },
+            {opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, "<0.3"
           );
 
           gsap.fromTo(projectVisual,
             {autoAlpha: 0},
-            {autoAlpha: 1, duration: 1.2, ease: "power1.out"},
-            "<0.5");
+            {autoAlpha: 1, duration: 0.7, ease: "sine.inOut"},
+            "<0.3");
     }
 
     let tl = gsap.timeline({
@@ -1166,23 +1165,24 @@ function initWorkScroll(next) {
 function initFooterWorks(next) {
     next = next || document;
 
-    let element = next.querySelector(".footer_2_contain"); // Restituisce il primo elemento trovato
-
+    let element = next.querySelector(".footer_2_contain"); // Seleziona l'elemento
 
     if (element) { // Verifica che l'elemento esista
         gsap.fromTo(
             element,
-            { autoAlpha: 0, y: "1rem" },
+            { autoAlpha: 0, y: "2rem" }, // Stato iniziale
             {
                 autoAlpha: 1,
                 y: "0rem",
                 duration: 1,
                 ease: "power3.out",
+                delay: 0.2,
                 scrollTrigger: {
                     trigger: element,
-                    start: "top 65%",
+                    markers: true,
+                    start: "top bottom", 
                     end: "top top",
-                    toggleActions: "play none none none",
+                    toggleActions: "restart none none none", 
                 },
             }
         );
@@ -1217,19 +1217,22 @@ function initContactHero(next) {
 function initProjectHero(next) {
     next = next || document;
     let heroProject = next.querySelector(".project_contain");
-    let heroVisual = next.querySelector(".visual_content");
+    let visualLayout = next.querySelector(".visual_layout");
 
 
     gsap.fromTo(
         heroProject,
-        { yPercent: 1, autoAlpha: 0 },
-        { delay: 0.7, autoAlpha: 1, yPercent: 0, duration: 0.9, ease: "power1.out", stagger: 0.1 }
+        { y: "1rem", autoAlpha: 0 },
+        { delay: 0.6, autoAlpha: 1, y: 0, duration: 0.7, ease: "power2.out" }
       );
 
-    gsap.fromTo(heroVisual,
+    
+      gsap.fromTo(visualLayout,
         {autoAlpha:0},
-        {autoAlpha: 1, duration: 1.2, ease: "power1.out"},
-        "<0.5");
+        {autoAlpha: 1, duration: 0.7, ease: "sine.inOut"},
+        "<0.3");
+
+     
 }
 
 
@@ -1243,9 +1246,9 @@ function initVisualSlidein(next) {
 
         gsap.to(element, {
             autoAlpha: 1, // L'elemento torna alla posizione originale
-            duration: 1.5,
-            ease: "power2.out",
-            stagger: 0.5,
+            duration: 0.7,
+            ease: "sine.inOut",
+            stagger: 0.7,
             scrollTrigger: {
                 trigger: element,
                 start: "top 80%",   // L'animazione inizia quando l'elemento è visibile
@@ -1568,17 +1571,21 @@ barba.init({
             initProjectLoader();
           } else {
             initProjectHero(next);
+            resetVideo(next);
         }
-        gsap.delayedCall(1.2, initSectionFade, [next]);
+        // gsap.delayedCall(1.2, initSectionFade, [next]);
+        // gsap.delayedCall(1.2, initVisualSlidein, [next]);
+        
         
         },
 
         afterEnter(data) {
             let next = data.next.container;
             initStopmotion(next);
-            updateYear(next)
+            //updateYear(next)
             initFooterWorks(next);
             initVisualSlidein(next);
+            initSectionFade(next);
         },
       },
       {
