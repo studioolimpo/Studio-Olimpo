@@ -24,59 +24,7 @@ CustomEase.create("load", "0.53, 0, 0, 1");
 
 
 
-////////////  LENIS  //////////
 
-let lenis;
-
-if (Webflow.env("editor") === undefined) {
-  lenis = new Lenis({
-    duration: 1.2, 
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smoothWheel: true, 
-  });
-
-  lenis.on("scroll", ScrollTrigger.update);
-
-
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000); 
-  });
-
-  gsap.ticker.lagSmoothing(0); 
-
-  $("[data-lenis-start]").on("click", function () {
-    lenis.start();
-  });
-
-  $("[data-lenis-stop]").on("click", function () {
-    lenis.stop();
-  });
-
-  $("[data-lenis-toggle]").on("click", function () {
-    $(this).toggleClass("stop-scroll");
-    if ($(this).hasClass("stop-scroll")) {
-      lenis.stop();
-    } else {
-      lenis.start();
-    }
-  });
-
-
-window.addEventListener("load", () => {
-  history.scrollRestoration = "manual";  
-  
-  setTimeout(() => {
-    if (window.innerWidth > 768) {
-      lenis.scrollTo(0, { duration: 0, immediate: true });
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, 0);  
-});
-
-window.onpageshow = (event) => event.persisted && window.location.reload();
-
-}
 
 
 function handleOrientationChange() {
