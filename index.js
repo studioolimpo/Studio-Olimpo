@@ -23,7 +23,45 @@
 CustomEase.create("load", "0.53, 0, 0, 1");
 
 
+////////////  LENIS  //////////
 
+  let lenis;
+
+  if (Webflow.env("editor") === undefined) {
+    lenis = new Lenis({
+      duration: 1.2, 
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true, 
+    });
+  
+    lenis.on("scroll", ScrollTrigger.update);
+  
+  
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000); 
+    });
+  
+    gsap.ticker.lagSmoothing(0); 
+  
+    $("[data-lenis-start]").on("click", function () {
+      lenis.start();
+    });
+  
+    $("[data-lenis-stop]").on("click", function () {
+      lenis.stop();
+    });
+  
+    $("[data-lenis-toggle]").on("click", function () {
+      $(this).toggleClass("stop-scroll");
+      if ($(this).hasClass("stop-scroll")) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    });
+  
+  }
+    
 
 
 
@@ -34,6 +72,7 @@ function handleOrientationChange() {
   }
   window.addEventListener("orientationchange", handleOrientationChange);
   
+
   CustomEase.create("main", "0.5, 0.05, 0.05, 0.99");
   CustomEase.create("load", "0.53, 0, 0, 1");
 
@@ -221,9 +260,7 @@ function initSectionFade(next) {
 let ranHomeLoader = false;
 
 
-//////////  HOME LOADER /////////
 function initHomeLoader() {
-
     let counter = { value: 0 };
     let loaderDuration = 3;
     let loaderWrap = document.querySelector(".loader_wrap");
@@ -291,12 +328,18 @@ function initHomeLoader() {
 
     let tl = gsap.timeline({
         onStart: function () {
-            lenis.stop();
+            lenis.stop(); 
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
         },
         onComplete: function () {
             ranHomeLoader = true;
             endLoaderAnimation();
-            lenis.start();
+            lenis.start(); 
         },
     });
 
@@ -348,6 +391,7 @@ function initHomeLoader() {
         stagger: 0.4
     }, "<");
 }
+
 
 
 ///////// LOADER ABOUT /////////
@@ -419,6 +463,13 @@ function initAboutLoader() {
     let tl = gsap.timeline({
         onStart: function () {
             lenis.stop();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
         onComplete: function () {
             ranHomeLoader = true;
@@ -538,6 +589,12 @@ function initWorksLoader() {
     let tl = gsap.timeline({
         onStart: function () {
             lenis.stop();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
         },
         onComplete: function () {
             ranHomeLoader = true;
@@ -665,6 +722,13 @@ function initContactLoader() {
     let tl = gsap.timeline({
         onStart: function () {
             lenis.stop();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
         onComplete: function () {
             ranHomeLoader = true;
@@ -794,6 +858,13 @@ function initProjectLoader() {
     let tl = gsap.timeline({
         onStart: function () {
             lenis.stop();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
         onComplete: function () {
             ranHomeLoader = true;
@@ -947,6 +1018,13 @@ function initErrorLoader() {
     let tl = gsap.timeline({
         onStart: function () {
             lenis.stop();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
         onComplete: function () {
             ranHomeLoader = true;
@@ -1324,17 +1402,24 @@ barba.hooks.enter((data) => {
     width: "100%",
     zIndex: 105,
   });
+
+
+ // da verificare 
+ lenis = new Lenis({
+    duration: 1.1,
+    wrapper: document.body,
+    easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -13 * t)),
+  });
+
+  console.log("enter")
+
 });
 
 
-barba.hooks.afterEnter((data) => {
-    // da verificare 
-    lenis = new Lenis({
-        duration: 1.1,
-        wrapper: document.body,
-        easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -13 * t)),
-      });
 
+
+
+barba.hooks.afterEnter((data) => {
       requestAnimationFrame(() => {
         ScrollTrigger.refresh();
     });
