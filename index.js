@@ -96,7 +96,6 @@ function playVideo(next) {
     const videos = next.querySelectorAll('.g_visual_video');
   
     if (videos.length === 0) {
-      console.warn("Nessun video trovato.");
       return;
     }
  
