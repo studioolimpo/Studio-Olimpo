@@ -93,38 +93,35 @@ function Signature() {
 
 function playVideo(next) {
 
-    const videos = next.querySelectorAll('.g_visual_video'); // Seleziona tutti i video con la classe .g_visual_video
+    const videos = next.querySelectorAll('.g_visual_video');
   
     if (videos.length === 0) {
       console.warn("Nessun video trovato.");
       return;
     }
-  
-    // Impostazioni per l'IntersectionObserver
+ 
     const options = {
-      root: null,  // Impostato a null per monitorare l'intera viewport
-      threshold: 0.5  // Avvia il video quando è visibile al 50%
+      root: null,  
+      threshold: 0.5
     };
   
-    // Callback per l'IntersectionObserver
     const callback = (entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const video = entry.target; // Prendi il video che è visibile
-          video.play(); // Avvia la riproduzione del video
-          observer.unobserve(video); // Rimuove l'observer per questo video
+          const video = entry.target;
+          video.play();
+          observer.unobserve(video);
         }
       });
     };
   
-    // Crea un nuovo IntersectionObserver
     const observer = new IntersectionObserver(callback, options);
   
-    // Inizia ad osservare ogni video
     videos.forEach(video => {
       observer.observe(video);
     });
   }
+
 
 
 ////// MOUSE MOVE CURSOR //////
