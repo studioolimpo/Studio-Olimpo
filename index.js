@@ -62,20 +62,19 @@ if (Webflow.env("editor") === undefined) {
   });
 
 
-
 window.addEventListener("load", () => {
-    history.scrollRestoration = "manual";
+  history.scrollRestoration = "manual";  
   
+  setTimeout(() => {
     if (window.innerWidth > 768) {
       lenis.scrollTo(0, { duration: 0, immediate: true });
     } else {
       window.scrollTo(0, 0);
     }
-  });
-  
-  window.onpageshow = (event) => event.persisted && window.location.reload();
+  }, 0);  
+});
 
-
+window.onpageshow = (event) => event.persisted && window.location.reload();
 
 }
 
@@ -1381,7 +1380,7 @@ barba.hooks.enter((data) => {
 
 
 barba.hooks.afterEnter((data) => {
-
+    // da verificare 
     lenis = new Lenis({
         duration: 1.1,
         wrapper: document.body,
