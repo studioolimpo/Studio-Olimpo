@@ -297,14 +297,11 @@ function initHomeLoader() {
     let counter = { value: 0 };
     let loaderDuration = 3;
     let loaderWrap = document.querySelector(".loader_wrap");
-    let loaderVisual = loaderWrap.querySelector(".loader_visual");
     let loaderVisualWrapper = loaderWrap.querySelectorAll(".loader_visual_wrapper");
     let loaderInner = loaderWrap.querySelectorAll(".loader_visual_inner");
-    let loaderProgress = loaderWrap.querySelector(".loader_progress");
     let loaderText = loaderWrap.querySelectorAll(".u-text-style-small");
     let logoHero = document.querySelectorAll(".logo_svg");
     let sloganHero = document.querySelectorAll(".hero_heading");
-    let logoHeader = document.querySelectorAll(".nav_logo_row");
 
     if (sessionStorage.getItem("visited") !== null) {
         loaderDuration = 3;
@@ -395,11 +392,11 @@ function initHomeLoader() {
     tl.fromTo(loaderText, {
         yPercent: 100,
     }, {
-        yPercent: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out"
+        yPercent: 0,
+        duration: 0.3,
+        stagger: 0.2,
+        ease: "power1.out",
     }, "<0.3");
 
     tl.fromTo(loaderInner, {
@@ -530,11 +527,11 @@ function initAboutLoader() {
     tl.fromTo(loaderText, {
         yPercent: 100,
     }, {
-        yPercent: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out"
+        yPercent: 0,
+        duration: 0.3,
+        stagger: 0.2,
+        ease: "power1.out",
     }, "<0.3");
 
     tl.fromTo(loaderInner, {
@@ -655,11 +652,11 @@ function initWorksLoader() {
     tl.fromTo(loaderText, {
         yPercent: 100,
     }, {
-        yPercent: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out"
+        yPercent: 0,
+        duration: 0.3,
+        stagger: 0.2,
+        ease: "power1.out",
     }, "<0.3");
 
     tl.fromTo(loaderInner, {
@@ -789,11 +786,11 @@ function initContactLoader() {
     tl.fromTo(loaderText, {
         yPercent: 100,
     }, {
-        yPercent: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out"
+        yPercent: 0,
+        duration: 0.3,
+        stagger: 0.2,
+        ease: "power1.out",
     }, "<0.3");
 
     tl.fromTo(loaderInner, {
@@ -925,11 +922,11 @@ function initProjectLoader() {
     tl.fromTo(loaderText, {
         yPercent: 100,
     }, {
-        yPercent: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out"
+        yPercent: 0,
+        duration: 0.3,
+        stagger: 0.2,
+        ease: "power1.out",
     }, "<0.3");
 
     tl.fromTo(loaderInner, {
@@ -1083,11 +1080,11 @@ function initErrorLoader() {
     tl.fromTo(loaderText, {
         yPercent: 100,
     }, {
-        yPercent: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out"
+        yPercent: 0,
+        duration: 0.3,
+        stagger: 0.2,
+        ease: "power1.out",
     }, "<0.3");
 
     tl.fromTo(loaderInner, {
