@@ -1546,8 +1546,8 @@ barba.init({
         gsap.delayedCall(1.5, initSectionFade, [next]);
 
         }
-        updateYear(next)
-        
+        updateYear(next);
+        playVideo(next);
 
       },
     },
@@ -1562,7 +1562,7 @@ barba.init({
         initAboutHero(next);
         }
         gsap.delayedCall(1.2, initSectionFade, [next]);
-        updateYear(next)
+        updateYear(next);
       },
     },
     {
@@ -1592,7 +1592,7 @@ barba.init({
           } else {
             initContactHero(next);
         }
-        updateYear(next)
+        updateYear(next);
       },
     },{
         namespace: "projects",
@@ -1626,7 +1626,7 @@ barba.init({
              } else {
               initError(next);
           }
-          updateYear(next)
+          updateYear(next);
         },
       },
   ],
