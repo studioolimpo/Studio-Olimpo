@@ -80,6 +80,31 @@ function handleOrientationChange() {
 
 //__________________GENERAL_________________//
 
+//////////// FORCE REPAINT //////////
+
+function forceRepaint() {
+    const body = document.body;
+    if (body) {
+      body.style.willChange = "transform";
+      body.style.transform = "translateZ(0)"; // Forza il repaint su tutta la pagina
+      requestAnimationFrame(() => {
+        body.style.transform = "";
+        body.style.willChange = "";
+      });
+    }
+  }
+  
+  // Per mobile: dopo un pinch-to-zoom
+  document.addEventListener("gestureend", forceRepaint);
+  
+  // Per desktop & mobile: dopo lo scroll veloce
+  document.addEventListener("scroll", () => {
+    clearTimeout(window.repaintTimeout);
+    window.repaintTimeout = setTimeout(forceRepaint, 150); // Attendi un attimo per evitare troppi repaint
+  }, { passive: true });
+
+
+
 /////////// SIGNATURE /////////
 
 function Signature() {
@@ -479,12 +504,12 @@ function initAboutLoader() {
 
         gsap.fromTo(
             aboutHero,
-            { yPercent: 10, opacity: 0 },
+            { yPercent: 5, opacity: 0 },
             {
               yPercent: 0,
               opacity: 1,
               duration: 0.7,
-              ease: "power1.out",
+              ease: "power2.out",
             },"<0.2");
 
 
@@ -1145,17 +1170,17 @@ function initHome(next) {
 
 function initAboutHero(next) {
     next = next || document; 
-    let elements = next.querySelector(".hero_about_contain");
+    let elements = next.querySelector(".hero_about_layout");
   
     gsap.fromTo(
       elements,
-      { yPercent: 10, opacity: 0 },
+      { yPercent: 4, autoAlpha: 0 },
       {
         yPercent: 0,
-        opacity: 1,
+        autoAlpha: 1,
         duration: 0.7,
-        delay: 0.5,
-        ease: "power1.out",
+        delay: 0.9,
+        ease: "power2.out",
       }
     );
   }
@@ -1194,7 +1219,7 @@ function initWorkScroll(next) {
             gsap.fromTo(element, { autoAlpha: 0, yPercent: 3 }, {
                 autoAlpha: 1,
                 yPercent: 0,
-                duration: 0.7,
+                duration: 0.9,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: element,
@@ -1434,7 +1459,6 @@ barba.hooks.enter((data) => {
   });
 
 
- // da verificare 
  lenis = new Lenis({
     duration: 1.1,
     wrapper: document.body,
@@ -1455,7 +1479,7 @@ barba.hooks.afterEnter((data) => {
     });
 
     Signature();
-    
+    forceRepaint();
 });
 
 
@@ -1543,7 +1567,7 @@ barba.init({
           } else {
         initHome(next);
         gsap.delayedCall(1.5, initThemeAnimation, [next]);
-        gsap.delayedCall(1.5, initSectionFade, [next]);
+        gsap.delayedCall(0.7, initSectionFade, [next]);
 
         }
         updateYear(next);
@@ -1561,7 +1585,7 @@ barba.init({
           } else {
         initAboutHero(next);
         }
-        gsap.delayedCall(1.2, initSectionFade, [next]);
+        gsap.delayedCall(1, initSectionFade, [next]);
         updateYear(next);
       },
     },
@@ -1581,6 +1605,9 @@ barba.init({
             }
             updateYear(next);
         },
+        afterEnter(data) {
+            forceRepaint();
+        },
     },
     {
       namespace: "contact",
@@ -1589,11 +1616,16 @@ barba.init({
         if (ranHomeLoader !== true) {
             initContactLoader();
             mouseMoveCursor();
+            forceRepaint();
           } else {
             initContactHero(next);
+            forceRepaint();
         }
         updateYear(next);
       },
+      afterEnter(data) {
+        forceRepaint();
+    },
     },{
         namespace: "projects",
         beforeEnter(data) {
@@ -1601,6 +1633,7 @@ barba.init({
           if (ranHomeLoader !== true) {
             initProjectLoader();
             mouseMoveCursor();
+            forceRepaint();
           } else {
             initProjectHero(next);
             resetVideo(next);
@@ -1614,6 +1647,7 @@ barba.init({
             initFooterWorks(next);
             initVisualSlidein(next);
             initSectionFade(next);
+            forceRepaint();
         },
       },
       {
@@ -1623,10 +1657,14 @@ barba.init({
             if (ranHomeLoader !== true) {
                initErrorLoader();
                mouseMoveCursor();
+               forceRepaint();
              } else {
               initError(next);
           }
           updateYear(next);
+        },
+        afterEnter(data) {
+            forceRepaint();
         },
       },
   ],
