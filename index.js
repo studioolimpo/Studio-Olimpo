@@ -80,31 +80,6 @@ function handleOrientationChange() {
 
 //__________________GENERAL_________________//
 
-//////////// FORCE REPAINT //////////
-
-function forceRepaint() {
-    const body = document.body;
-    if (body) {
-      body.style.willChange = "transform";
-      body.style.transform = "translateZ(0)"; // Forza il repaint su tutta la pagina
-      requestAnimationFrame(() => {
-        body.style.transform = "";
-        body.style.willChange = "";
-      });
-    }
-  }
-  
-  // Per mobile: dopo un pinch-to-zoom
-  document.addEventListener("gestureend", forceRepaint);
-  
-  // Per desktop & mobile: dopo lo scroll veloce
-  document.addEventListener("scroll", () => {
-    clearTimeout(window.repaintTimeout);
-    window.repaintTimeout = setTimeout(forceRepaint, 150); // Attendi un attimo per evitare troppi repaint
-  }, { passive: true });
-
-
-
 /////////// SIGNATURE /////////
 
 function Signature() {
@@ -925,6 +900,12 @@ function initProjectLoader() {
             ranHomeLoader = true;
             endLoaderAnimation();
             lenis.start();
+            
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
         },
     });
 
@@ -1170,7 +1151,7 @@ function initHome(next) {
 
 function initAboutHero(next) {
     next = next || document; 
-    let elements = next.querySelector(".hero_about_layout");
+    let elements = next.querySelector(".hero_about_contain");
   
     gsap.fromTo(
       elements,
@@ -1178,9 +1159,9 @@ function initAboutHero(next) {
       {
         yPercent: 0,
         autoAlpha: 1,
-        duration: 0.7,
-        delay: 0.9,
-        ease: "power2.out",
+        duration: 0.5,
+        delay: 0.8,
+        ease: "power1.out",
       }
     );
   }
@@ -1479,7 +1460,6 @@ barba.hooks.afterEnter((data) => {
     });
 
     Signature();
-    forceRepaint();
 });
 
 
@@ -1605,9 +1585,6 @@ barba.init({
             }
             updateYear(next);
         },
-        afterEnter(data) {
-            forceRepaint();
-        },
     },
     {
       namespace: "contact",
@@ -1616,16 +1593,11 @@ barba.init({
         if (ranHomeLoader !== true) {
             initContactLoader();
             mouseMoveCursor();
-            forceRepaint();
           } else {
             initContactHero(next);
-            forceRepaint();
         }
         updateYear(next);
       },
-      afterEnter(data) {
-        forceRepaint();
-    },
     },{
         namespace: "projects",
         beforeEnter(data) {
@@ -1633,7 +1605,6 @@ barba.init({
           if (ranHomeLoader !== true) {
             initProjectLoader();
             mouseMoveCursor();
-            forceRepaint();
           } else {
             initProjectHero(next);
             resetVideo(next);
@@ -1647,7 +1618,6 @@ barba.init({
             initFooterWorks(next);
             initVisualSlidein(next);
             initSectionFade(next);
-            forceRepaint();
         },
       },
       {
@@ -1657,14 +1627,10 @@ barba.init({
             if (ranHomeLoader !== true) {
                initErrorLoader();
                mouseMoveCursor();
-               forceRepaint();
              } else {
               initError(next);
           }
           updateYear(next);
-        },
-        afterEnter(data) {
-            forceRepaint();
         },
       },
   ],
