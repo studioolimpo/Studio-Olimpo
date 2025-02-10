@@ -80,6 +80,116 @@ function handleOrientationChange() {
 
 //__________________GENERAL_________________//
 
+////////// INIT MENU //////////
+
+function initMenu() {
+    gsap.registerPlugin(CustomEase);
+    CustomEase.create("main", "0.33, 0, 0.13, 1");
+  
+    gsap.defaults({
+      ease: "main",
+      duration: 0.7
+    });
+  
+    let navWrap = document.querySelector(".nav_wrap");
+    let state = navWrap.getAttribute("data-nav");
+    let overlay = navWrap.querySelector(".nav_overlay");
+    let menu = navWrap.querySelector(".nav_menu");
+    let logoLink = navWrap.querySelector(".nav_logo_row");
+    let bgPanels = navWrap.querySelectorAll(".nav_menu_panel");
+    let menuToggles = document.querySelectorAll("[data-menu-toggle]");
+    let menuLinks = navWrap.querySelectorAll(".u-text-style-display");
+    let menuIndexs = navWrap.querySelectorAll(".u-text-style-small");
+    let menuButton = document.querySelector(".menu_btn_wrap");
+    let menuButtonLayout = menuButton.querySelectorAll(".menu_btn_layout");
+    let menuDivider = navWrap.querySelectorAll(".nav_menu_divider");
+    let menuList = navWrap.querySelector(".nav_menu_list");
+    let navTransition = navWrap.querySelector(".nav_transition");
+    let CurrentYear = navWrap.querySelector(".current-year");
+  
+    let tl = gsap.timeline();
+  
+    const openNav = () => {
+      navWrap.setAttribute("data-nav", "open");
+      tl.clear()
+        .set(navWrap, { display: "block" })
+        .set(menu, { yPercent: 0 }, "<")
+        .set(navTransition, { autoAlpha: 0 }, "<")
+        .fromTo(menuButtonLayout, { yPercent: 0 }, { yPercent: -150, duration: 1.2 }, "<")
+        .fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, "<")
+        .fromTo(bgPanels, { yPercent: 101 }, { yPercent: 0, duration: 0.6 }, "<")
+        .fromTo(menuList, { yPercent: 60 }, { yPercent: 0 }, "<")
+        .fromTo(menuDivider, { scaleX: 0, transformOrigin: "left" }, { scaleX: 1, stagger: 0.1, duration: 1 }, "<")
+        .fromTo(menuIndexs, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, stagger: 0.1 }, "<")
+        .fromTo(menuLinks, { autoAlpha: 0, yPercent: 140 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, stagger: 0.1 }, "<0.1");
+    };
+  
+    const closeNav = () => {
+      navWrap.setAttribute("data-nav", "closed");
+      tl.clear()
+        .to(overlay, { autoAlpha: 0 })
+        .to(menu, { yPercent: -110 }, "<")
+        .to(menuButtonLayout, { yPercent: 0 }, "<")
+        .set(navWrap, { display: "none" });
+    };
+  
+    const transitionNav = () => {
+      navWrap.setAttribute("data-nav", "closed");
+      tl.clear()
+        .to(overlay, { autoAlpha: 0, delay: 0.1 })
+        .to(navTransition, { autoAlpha: 1, duration: 0.5 }, "<")
+        .to(menu, { yPercent: -50, ease: "power2.out" }, "<")
+        .to(menuButtonLayout, { yPercent: 0 }, "<0.3")
+        .set(navWrap, { display: "none" });
+    };
+  
+    menuToggles.forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        state = navWrap.getAttribute("data-nav");
+        if (state === "open") {
+          closeNav();
+          lenis.start();
+        } else {
+          openNav();
+          lenis.stop();
+        }
+      });
+    });
+  
+    $("a").on("click", function (e) {
+      if (
+        $(this).prop("hostname") === window.location.host &&
+        $(this).attr("href").indexOf("#") === -1 &&
+        $(this).attr("target") !== "_blank" &&
+        navWrap.getAttribute("data-nav") === "open"
+      ) {
+        e.preventDefault();
+        transitionNav();
+        lenis.start();
+      }
+    });
+  
+    function updateYear() {
+      const currentYr = new Date().getFullYear();
+      if (CurrentYear) {
+        CurrentYear.textContent = currentYr;
+      }
+    }
+  
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && navWrap.getAttribute("data-nav") === "open") {
+        closeNav();
+        lenis.start();
+      }
+    });
+  
+    updateYear();
+  }
+  
+  
+
+
+
 /////////// SIGNATURE /////////
 
 function Signature() {
@@ -1458,7 +1568,7 @@ barba.hooks.afterEnter((data) => {
       requestAnimationFrame(() => {
         ScrollTrigger.refresh();
     });
-
+    
     Signature();
 });
 
@@ -1472,8 +1582,7 @@ barba.hooks.after((data) => {
   $(window).scrollTop(0);
 
   resetWebflow(data);
-
-
+  initMenu();
 
 });
 
@@ -1528,7 +1637,6 @@ barba.init({
 
         return tl;
 
-        
       },
     },
   ],
@@ -1543,6 +1651,7 @@ barba.init({
             initThemeAnimation(next);
             initSectionFade (next);
             mouseMoveCursor();
+            initMenu();
 
           } else {
         initHome(next);
@@ -1562,6 +1671,7 @@ barba.init({
         if (ranHomeLoader !== true) {
             initAboutLoader();
             mouseMoveCursor();
+            initMenu();
           } else {
         initAboutHero(next);
         }
@@ -1576,6 +1686,7 @@ barba.init({
     
             if (ranHomeLoader !== true) {
                 initWorksLoader();
+                initMenu();
                 resetVisual(next);
                 mouseMoveCursor();
                 gsap.delayedCall(4.2, initWorkScroll, [next]);
@@ -1593,6 +1704,7 @@ barba.init({
         if (ranHomeLoader !== true) {
             initContactLoader();
             mouseMoveCursor();
+            initMenu();
           } else {
             initContactHero(next);
         }
@@ -1605,6 +1717,7 @@ barba.init({
           if (ranHomeLoader !== true) {
             initProjectLoader();
             mouseMoveCursor();
+            initMenu();
           } else {
             initProjectHero(next);
             resetVideo(next);
@@ -1627,6 +1740,7 @@ barba.init({
             if (ranHomeLoader !== true) {
                initErrorLoader();
                mouseMoveCursor();
+               initMenu();
              } else {
               initError(next);
           }
