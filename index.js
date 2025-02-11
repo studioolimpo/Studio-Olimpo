@@ -147,7 +147,8 @@ function initMenu() {
         ) {
             
             if (window.location.pathname === $(this).attr("href")) {
-                closeNav(); 
+                closeNav();
+                lenis.start(); 
             } else {
                 e.preventDefault();  
                 transitionNav();     
@@ -507,7 +508,7 @@ function initHomeLoader() {
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         autoAlpha: 1,
-        scale: 1,
+        scale: 1.01,
         duration: 1
     }, "<0.1");
 
