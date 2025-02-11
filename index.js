@@ -1,23 +1,4 @@
 
-
-// const appHeight = () => {
-//     const doc = document.documentElement;
-//     doc.style.setProperty("--app-height", `${window.innerHeight}px`);
-//   };
-  
-//   window.addEventListener("resize", appHeight);
-//   appHeight();
-  
-//   window.addEventListener("DOMContentLoaded", () => {
-//     appHeight();
-    
-   
-//     const appHeightValue = getComputedStyle(document.documentElement).getPropertyValue("--app-height");
-//     console.log(appHeightValue);
-//   });
-
-
-
 //// CUSTOM EASE /////
 
 CustomEase.create("load", "0.53, 0, 0, 1");
@@ -134,14 +115,14 @@ function initMenu() {
     };
   
     const transitionNav = () => {
-      navWrap.setAttribute("data-nav", "closed");
-      tl.clear()
-        .to(overlay, { autoAlpha: 0, delay: 0.1 })
-        .to(navTransition, { autoAlpha: 1, duration: 0.5 }, "<")
-        .to(menu, { yPercent: -50, ease: "power2.out" }, "<")
-        .to(menuButtonLayout, { yPercent: 0 }, "<0.3")
-        .set(navWrap, { display: "none" });
-    };
+        navWrap.setAttribute("data-nav", "closed");
+        tl.clear()
+          .to(overlay, { autoAlpha: 0, delay: 0.1 })
+          .to(navTransition, { autoAlpha: 1, duration: 0.5 }, "<")
+          .to(menu, { yPercent: -50, ease: "power2.out" }, "<")
+          .to(menuButtonLayout, { yPercent: 0 }, "<0.3")
+          .set(navWrap, { display: "none" });
+      };
   
     menuToggles.forEach((toggle) => {
       toggle.addEventListener("click", () => {
@@ -157,17 +138,25 @@ function initMenu() {
     });
   
     $("a").on("click", function (e) {
-      if (
-        $(this).prop("hostname") === window.location.host &&
-        $(this).attr("href").indexOf("#") === -1 &&
-        $(this).attr("target") !== "_blank" &&
-        navWrap.getAttribute("data-nav") === "open"
-      ) {
-        e.preventDefault();
-        transitionNav();
-        lenis.start();
-      }
+        
+        if (
+            $(this).prop("hostname") === window.location.host &&
+            $(this).attr("href").indexOf("#") === -1 &&
+            $(this).attr("target") !== "_blank" &&
+            navWrap.getAttribute("data-nav") === "open"
+        ) {
+            
+            if (window.location.pathname === $(this).attr("href")) {
+                closeNav(); 
+            } else {
+                e.preventDefault();  
+                transitionNav();     
+            }
+        }
     });
+
+
+  
   
     function updateYear() {
       const currentYr = new Date().getFullYear();
@@ -1283,7 +1272,6 @@ function initAboutHero(next) {
 function initWorkScroll(next) {
     next = next || document;
 
-    console.log("works scroll RUN!");
 
     let elements = next.querySelectorAll("[visual-fade-in]");
 
@@ -1556,7 +1544,6 @@ barba.hooks.enter((data) => {
     easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -13 * t)),
   });
 
-  console.log("enter")
 
 });
 
@@ -1585,22 +1572,21 @@ barba.hooks.after((data) => {
 
 });
 
-// $(document).ready(function () {
-//   $("a").on("click", function (e) {
-//     var destination = $(this).attr("href");
-//     var currentLocation = window.location.pathname;
+$(document).ready(function () {
+  $("a").on("click", function (e) {
+    var destination = $(this).attr("href");
+    var currentLocation = window.location.pathname;
 
-//     if (
-//       destination === currentLocation ||
-//       destination === currentLocation + "#" ||
-//       destination === currentLocation + window.location.search
-//     ) {
-//       e.preventDefault();
+    if (
+      destination === currentLocation ||
+      destination === currentLocation + "#" ||
+      destination === currentLocation + window.location.search
+    ) {
+      e.preventDefault();
 
-//       barba.go(destination);
-//     }
-//   });
-// });
+    }
+  });
+});
 
 barba.init({
   preventRunning: true,
