@@ -508,7 +508,7 @@ function initHomeLoader() {
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         autoAlpha: 1,
-        scale: 1.01,
+        scale: 1,
         duration: 1
     }, "<0.1");
 
@@ -1539,11 +1539,13 @@ barba.hooks.enter((data) => {
   });
 
 
- lenis = new Lenis({
-    duration: 1.1,
-    wrapper: document.body,
-    easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -13 * t)),
-  });
+  if (!window.lenis) {
+    window.lenis = new Lenis({
+        duration: 1.1,
+        wrapper: document.body,
+        easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -13 * t)),
+    });
+}
 
 
 });
