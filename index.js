@@ -1509,6 +1509,7 @@ function resetWebflow(data) {
 barba.hooks.leave(() => {
 
     lenis.destroy();
+    lenis = null;
 
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     
@@ -1539,14 +1540,15 @@ barba.hooks.enter((data) => {
   });
 
 
-  if (!window.lenis) {
-    window.lenis = new Lenis({
+  if (!lenis) {  // ✅ Ora il controllo funziona e Lenis viene ricreato
+    lenis = new Lenis({
         duration: 1.1,
         wrapper: document.body,
         easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -13 * t)),
     });
 }
 
+lenis.start();
 
 });
 
