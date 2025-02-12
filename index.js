@@ -1540,7 +1540,7 @@ barba.hooks.enter((data) => {
   });
 
 
-  if (!lenis) {  // ✅ Ora il controllo funziona e Lenis viene ricreato
+  if (!lenis) { 
     lenis = new Lenis({
         duration: 1.1,
         wrapper: document.body,
@@ -1729,8 +1729,8 @@ barba.init({
             let next = data.next.container;
             if (ranHomeLoader !== true) {
                initErrorLoader();
-               mouseMoveCursor();
                initMenu();
+               mouseMoveCursor();   
              } else {
               initError(next);
           }
