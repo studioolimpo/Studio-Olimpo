@@ -180,7 +180,7 @@ function initMenu() {
 
 
 
-/////////// SIGNATURE /////////
+///////// SIGNATURE /////////
 
 function Signature() {
     if (ranHomeLoader === false) { 
@@ -189,7 +189,7 @@ function Signature() {
   }
 
 
-////// PLAY VIDEO IN VIEWPORT //////////
+////// PLAY VIDEO IN VIEWPORT //////
 
 function playVideo(next) {
 
@@ -223,7 +223,7 @@ function playVideo(next) {
 
 
 
-////// MOUSE MOVE CURSOR //////
+////// CUSTOM CURSOR //////
 
 function mouseMoveCursor() {
     const cursor = document.querySelector(".cursor_wrap");
@@ -386,6 +386,33 @@ function initSectionFade(next) {
 
 
 
+///////////  LOADER VISUAL STOPMOTION //////////
+
+function initLoaderVisual(next = document) {
+    next.querySelectorAll("[data-loader-group]").forEach((section) => {
+        let visuals = section.querySelectorAll("[data-loader-visual]");
+        if (!visuals.length) return;
+
+        let currentIndex = 0;
+
+        gsap.set(visuals, { opacity: 0, position: "absolute" });
+        gsap.set(visuals[0], { opacity: 1, position: "absolute" });
+
+        function animateLoader() {
+            if (++currentIndex >= visuals.length) return; // Ferma all'ultimo frame
+            
+            gsap.set(visuals[currentIndex - 1], { opacity: 0, position: "absolute" });
+            gsap.set(visuals[currentIndex], { opacity: 1, position: "absolute" });
+
+            setTimeout(animateLoader, 300);
+        }
+
+        setTimeout(animateLoader, 300);
+    });
+}
+
+
+
 
 
 //__________________LOADER _________________//
@@ -478,7 +505,7 @@ function initHomeLoader() {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
     });
-    gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
+    // gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
 
     CustomEase.create("load", "0.53, 0, 0, 1");
 
@@ -512,14 +539,21 @@ function initHomeLoader() {
         duration: 1
     }, "<0.1");
 
-    tl.fromTo(loaderVisualWrapper, {
-        autoAlpha: 0
-    }, {
-        autoAlpha: 1,
-        ease: "none",
-        duration: 0.01,
-        stagger: 0.4
-    }, "<");
+    // tl.fromTo(loaderVisualWrapper, {
+    //     autoAlpha: 0
+    // }, {
+    //     autoAlpha: 1,
+    //     ease: "none",
+    //     duration: 0.01,
+    //     stagger: 0.4
+    // }, "<");
+
+
+    tl.add(() => {
+        initLoaderVisual(); // Lancia la funzione al posto del tween
+    }, "<0.1");
+
+
 }
 
 
@@ -613,7 +647,6 @@ function initAboutLoader() {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
     });
-    gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
 
     CustomEase.create("load", "0.53, 0, 0, 1");
 
@@ -647,15 +680,11 @@ function initAboutLoader() {
         duration: 1
     }, "<0.1");
 
-    tl.fromTo(loaderVisualWrapper, {
-        autoAlpha: 0
-    }, {
-        autoAlpha: 1,
-        ease: "none",
-        duration: 0.01,
-        stagger: 0.4
-    }, "<");
+    tl.add(() => {
+        initLoaderVisual(); // Lancia la funzione al posto del tween
+    }, "<0.1");
 }
+
 
 
 ///////// LOADER WORKS /////////
@@ -670,11 +699,6 @@ function initWorksLoader() {
     let loaderProgress = loaderWrap.querySelector(".loader_progress");
     let loaderText = loaderWrap.querySelectorAll(".u-text-style-small");
     let worksVisual = document.querySelectorAll("#hero .hero_visual_item");
-  
-  
-    
-   
-
 
 
     if (sessionStorage.getItem("visited") !== null) {
@@ -738,7 +762,6 @@ function initWorksLoader() {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
     });
-    gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
 
     CustomEase.create("load", "0.53, 0, 0, 1");
 
@@ -772,18 +795,13 @@ function initWorksLoader() {
         duration: 1
     }, "<0.1");
 
-    tl.fromTo(loaderVisualWrapper, {
-        autoAlpha: 0
-    }, {
-        autoAlpha: 1,
-        ease: "none",
-        duration: 0.01,
-        stagger: 0.4
-    }, "<");
+    tl.add(() => {
+        initLoaderVisual(); // Lancia la funzione al posto del tween
+    }, "<0.1");
 }
 
 
-///////// LOADER WORKS /////////
+///////// LOADER CONTACT /////////
 function initContactLoader() {
 
     let counter = { value: 0 };
@@ -872,7 +890,6 @@ function initContactLoader() {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
     });
-    gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
 
     CustomEase.create("load", "0.53, 0, 0, 1");
 
@@ -906,14 +923,9 @@ function initContactLoader() {
         duration: 1
     }, "<0.1");
 
-    tl.fromTo(loaderVisualWrapper, {
-        autoAlpha: 0
-    }, {
-        autoAlpha: 1,
-        ease: "none",
-        duration: 0.01,
-        stagger: 0.4
-    }, "<");
+    tl.add(() => {
+        initLoaderVisual(); // Lancia la funzione al posto del tween
+    }, "<0.1");
 }
 
 
@@ -930,9 +942,6 @@ function initProjectLoader() {
     let loaderText = loaderWrap.querySelectorAll(".u-text-style-small");
     let projectHero = document.querySelectorAll(".project_contain");
     let projectVisual = document.querySelectorAll(".visual_layout");
-
-    
-
 
 
     if (sessionStorage.getItem("visited") !== null) {
@@ -1014,7 +1023,6 @@ function initProjectLoader() {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
     });
-    gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
 
     CustomEase.create("load", "0.53, 0, 0, 1");
 
@@ -1048,14 +1056,9 @@ function initProjectLoader() {
         duration: 1
     }, "<0.1");
 
-    tl.fromTo(loaderVisualWrapper, {
-        autoAlpha: 0
-    }, {
-        autoAlpha: 1,
-        ease: "none",
-        duration: 0.01,
-        stagger: 0.4
-    }, "<");
+    tl.add(() => {
+        initLoaderVisual(); // Lancia la funzione al posto del tween
+    }, "<0.1");
 }
 
 
@@ -1174,7 +1177,6 @@ function initErrorLoader() {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
     });
-    gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
 
     tl.to(counter, {
         value: 404,
@@ -1206,14 +1208,9 @@ function initErrorLoader() {
         duration: 1
     }, "<0.1");
 
-    tl.fromTo(loaderVisualWrapper, {
-        autoAlpha: 0
-    }, {
-        autoAlpha: 1,
-        ease: "none",
-        duration: 0.01,
-        stagger: 0.4
-    }, "<");
+    tl.add(() => {
+        initLoaderVisual(); // Lancia la funzione al posto del tween
+    }, "<0.1");
 }
 
 
