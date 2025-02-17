@@ -399,7 +399,7 @@ function initLoaderVisual(next = document) {
         gsap.set(visuals[0], { opacity: 1, position: "absolute" });
 
         function animateLoader() {
-            if (++currentIndex >= visuals.length) return; // Ferma all'ultimo frame
+            if (++currentIndex >= visuals.length) return;
             
             gsap.set(visuals[currentIndex - 1], { opacity: 0, position: "absolute" });
             gsap.set(visuals[currentIndex], { opacity: 1, position: "absolute" });
@@ -497,6 +497,13 @@ function initHomeLoader() {
             ranHomeLoader = true;
             endLoaderAnimation();
             lenis.start(); 
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
     });
 
@@ -505,7 +512,6 @@ function initHomeLoader() {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         webkitClipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
     });
-    // gsap.set(loaderVisualWrapper, { autoAlpha: 0 });
 
     CustomEase.create("load", "0.53, 0, 0, 1");
 
@@ -539,18 +545,9 @@ function initHomeLoader() {
         duration: 1
     }, "<0.1");
 
-    // tl.fromTo(loaderVisualWrapper, {
-    //     autoAlpha: 0
-    // }, {
-    //     autoAlpha: 1,
-    //     ease: "none",
-    //     duration: 0.01,
-    //     stagger: 0.4
-    // }, "<");
-
 
     tl.add(() => {
-        initLoaderVisual(); // Lancia la funzione al posto del tween
+        initLoaderVisual();
     }, "<0.1");
 
 
@@ -639,6 +636,13 @@ function initAboutLoader() {
             ranHomeLoader = true;
             endLoaderAnimation();
             lenis.start();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
     });
 
@@ -681,7 +685,7 @@ function initAboutLoader() {
     }, "<0.1");
 
     tl.add(() => {
-        initLoaderVisual(); // Lancia la funzione al posto del tween
+        initLoaderVisual(); 
     }, "<0.1");
 }
 
@@ -754,6 +758,13 @@ function initWorksLoader() {
             ranHomeLoader = true;
             endLoaderAnimation();
             lenis.start();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
     });
 
@@ -796,7 +807,7 @@ function initWorksLoader() {
     }, "<0.1");
 
     tl.add(() => {
-        initLoaderVisual(); // Lancia la funzione al posto del tween
+        initLoaderVisual();
     }, "<0.1");
 }
 
@@ -882,6 +893,13 @@ function initContactLoader() {
             ranHomeLoader = true;
             endLoaderAnimation();
             lenis.start();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+
         },
     });
 
@@ -1169,6 +1187,13 @@ function initErrorLoader() {
             ranHomeLoader = true;
             endLoaderAnimation();
             lenis.start();
+
+            if (window.innerWidth > 768) {
+                lenis.scrollTo(0, { duration: 0, immediate: true });  
+            } else {
+                window.scrollTo(0, 0); 
+            }
+            
         },
     });
 
